@@ -1,6 +1,6 @@
-// test file
 R ~ X1 + X2 + X3;
-Z ~ 4.5*X4 + X2;
-Z ~ X1;
+Z ~ X4;
+Z ~ X2;
+Z ~ X4 + X5; // X4 will only be added once
 E ~ Z + R;
-O ~ 2.0*E + 4.5*Z;
+Y ~ 5.0*E + Z + 0.5*R + X6;
