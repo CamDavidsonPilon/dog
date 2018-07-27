@@ -15,19 +15,13 @@ etc.
 Syntax and Grammar
 ----------------------
 
-`<variables>`: these represent nodes in the causal diagram. There are special variables, denoted `E` and `O` (exposure and outcome).
-
-`~`: represent a causal relationship. The LHS is a child variable of all the variables on the RHS.
-
-`+`: assumes a linear relationship between variables
-
-`<floats>`: can be added or multiplied to variables
-
-`*`: multiply a float by a variable.
-
-`;`: end of line statement
-
-`//`: inline comment
+ - `<variables>`: these represent nodes in the causal diagram. There are  special variables, denoted `E` and `O` (exposure and outcome).
+ - `~`: represent a causal relationship. The LHS is a child variable of all the  variables on the RHS.
+ - `+`: assumes a linear relationship between variables
+ - `<floats>`: can be added or multiplied to variables
+ - `*`: multiply a float by a variable.
+ - `;`: end of line statement
+ - `//`: inline comment
 
 Dog programs are represented as lines of forumlas, each line describing parent-child relationships. 
 
