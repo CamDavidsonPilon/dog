@@ -15,19 +15,26 @@ etc.
 Syntax and Grammar
 ----------------------
 
-`<variables>`: these represent nodes in the causal diagram. There are special variables, denoted `E` and `O` (exposure and outcome). 
+`<variables>`: these represent nodes in the causal diagram. There are special variables, denoted `E` and `O` (exposure and outcome).
+
 `~`: represent a causal relationship. The LHS is a child variable of all the variables on the RHS.
+
 `+`: assumes a linear relationship between variables
+
 `<floats>`: can be added or multiplied to variables
+
 `*`: multiply a float by a variable.
+
 `;`: end of line statement
+
 `//`: inline comment
 
-Dog programs are represented as lines of forumlas, each line describing partent-child relationships. 
+Dog programs are represented as lines of forumlas, each line describing parent-child relationships. 
 
 Example:
 
 ```
+// graph.dg
 R ~ X1 + X2 + X3;
 Z ~ X4;
 Z ~ X2;
@@ -43,6 +50,7 @@ This produces the following DAG:
 You can quickly iterate on this DAG by adding more lines, relationships or variables:
 
 ```
+// graph2.dg
 R ~ X1 + X2 + X3;
 Z ~ X4;
 Z ~ X2;
