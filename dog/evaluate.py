@@ -15,9 +15,10 @@
         return eval('%s' % node.name)
 
 """
+import sys
 from operator import add
 from functools import reduce
-from .errors import error
+from .errors import error, errors_reported
 from .checker import CheckProgramVisitor
 from .ast import *
 from collections import defaultdict
@@ -76,6 +77,8 @@ def evaluate_program(program):
     ast = parse(program)
     checker = CheckProgramVisitor()
     checker.visit(ast)
+    if errors_reported() > 0:
+        sys.exit()
 
     eval = Evaluator(checker)
 

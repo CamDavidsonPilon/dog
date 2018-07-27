@@ -34,12 +34,12 @@ Z ~ X4;
 Z ~ X2;
 Z ~ X4 + X5; // X4 will only be added once
 E ~ Z + R;
-Y ~ 5.0*E + Z;
+O ~ 5.0*E + Z;
 ```
 
 This produces the following DAG:
 
-![dag](https://i.imgur.com/wfDongg.png)
+![dag](https://imgur.com/xMIOe00.png)
 
 You can quickly iterate on this DAG by adding more lines, relationships or variables:
 
@@ -48,12 +48,12 @@ You can quickly iterate on this DAG by adding more lines, relationships or varia
 R ~ X1 + X2 + X3;
 Z ~ X4;
 Z ~ X2;
-Z ~ X4 + X5
-E ~ Z + R;
-Y ~ 5.0*E + Z + 0.5*R + X6;
+Z ~ X4 + X5; // X4 will only be added once
+E ~ 0.2*Z;
+O ~ 5.0*E + 0.1*Z + R + X6;
 ```
 
-![dag2](https://i.imgur.com/Hoy9zGb.png)
+![dag2](https://imgur.com/yo5uBQJ.png)
 
 The order of the forumals don't matter. This was to allow the user to quickly iterate on connections and not have to worry about maintaining the "DAG" on paper. 
 
@@ -76,6 +76,7 @@ Future
 --------
 
 Implement the backdoor criteria to control for the correct things. 
+Implement unobserved variables
 Implement sample size configs
 Introduce non-linear relationships
 Introduce different noise

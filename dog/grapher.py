@@ -15,9 +15,10 @@
         return eval('%s' % node.name)
 
 """
+import sys
 from operator import add
 from functools import reduce
-from .errors import error
+from .errors import error, errors_reported
 from .checker import CheckProgramVisitor
 from .ast import *
 from collections import defaultdict
@@ -45,7 +46,7 @@ class Grapher():
         import numpy as np
         import matplotlib.pyplot as plt
         import pylab
-        from networkx.drawing.nx_agraph import write_dot, graphviz_layout
+        from networkx.drawing.nx_agraph import graphviz_layout
 
         edge_labels= {(u,v,): d['weight']
                      for u,v,d in self.graph.edges(data=True)
@@ -57,6 +58,7 @@ class Grapher():
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
         nx.draw_networkx(self.graph, pos, node_color="#d3d3d3", node_size=1200, edge_color='black', linewidths=1.0)
+        plt.axis('off')
         pylab.show()
 
 
@@ -67,6 +69,9 @@ def graph_dag(program):
     ast = parse(program)
     checker = CheckProgramVisitor()
     checker.visit(ast)
+
+    if errors_reported() > 0:
+        sys.exit()
 
     graph = Grapher(checker)
 

@@ -2,5 +2,5 @@ R ~ X1 + X2 + X3;
 Z ~ X4;
 Z ~ X2;
 Z ~ X4 + X5; // X4 will only be added once
-E ~ Z + R;
-Y ~ 5.0*E + Z + 0.5*R + X6;
+E ~ 0.2*Z;
+O ~ 5.0*E + 0.1*Z + R + X6;

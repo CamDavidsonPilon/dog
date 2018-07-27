@@ -50,6 +50,10 @@ class DogParser(Parser):
     def expression(self, p):
         return SimpleLocation(p.ID, lineno=p.lineno)
 
+    @_('EXPOSURE')
+    def expression(self, p):
+        return Exposure(p[0], lineno=p.lineno)
+
     @_('literal')
     def expression(self, p):
         return p.literal
