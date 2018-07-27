@@ -48,12 +48,16 @@ You can quickly iterate on this DAG by adding more lines, relationships or varia
 R ~ X1 + X2 + X3;
 Z ~ X4;
 Z ~ X2;
-Z ~ X4 + X5; // X4 will only be added once
+Z ~ X4 + X5
 E ~ Z + R;
 Y ~ 5.0*E + Z + 0.5*R + X6;
 ```
 
 ![dag2](https://i.imgur.com/Hoy9zGb.png)
+
+The order of the forumals don't matter. This was to allow the user to quickly iterate on connections and not have to worry about maintaining the "DAG" on paper. 
+
+Variables that never show up on the left hand, like `X1`, `X2`, etc. above, are treated as "noise" and given random values. 
 
 
 Usage
@@ -72,5 +76,6 @@ Future
 --------
 
 Implement the backdoor criteria to control for the correct things. 
+Implement sample size configs
 Introduce non-linear relationships
 Introduce different noise
