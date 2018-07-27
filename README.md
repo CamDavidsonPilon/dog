@@ -2,7 +2,7 @@ Dog
 ------
 
 
-This is a simple programming lanuage for experimenting with causal diagram. With Dog, one can define a causal diagram using formulas and then both i) represent the diagram visually, ii) evaulate the effect of an exposure on an outcome variable. 
+Dog is a simple programming language for experimenting with causal diagram. With Dog, one can define a causal diagram using formulas and then both i) represent the diagram visually, ii) evaulate the effect of an exposure on an outcome variable. 
 
 Why? I wanted to quickly test ideas like:
 
