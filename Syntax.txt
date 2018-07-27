@@ -1,0 +1,24 @@
+Syntax
+------------
+
+
+<variables>: these represent nodes in the causal diagram. There are special variables, denoted E and O (exposure and outcome). 
+~: represent a causal relationship. The LHS is a child variable of all the variables on the RHS.
++: assumes a linear relationship between variables
+<floats>: can be added or multiplied to variables
+*: multiply a coefficient by a variable.
+
+Ex:
+```
+R ~ X1 + X2 + X3;
+Z ~ X4;
+Z ~ X2;
+Z ~ X4 + X5; // X4 will only be added once
+E ~ Z + R + 1.0;
+Y ~ 5.0*E + Z;
+```
+
+
+Future:
+Introduce non-linear relationships
+Introduce different noise
