@@ -2,7 +2,7 @@ import sys
 from operator import add
 from functools import reduce
 from .errors import error, errors_reported
-from .checker import CheckProgramVisitor
+from .checker import check_program
 from .ast import *
 from collections import defaultdict
 from numpy import random as random
@@ -13,10 +13,6 @@ from statsmodels import api as sm
 
 N = 1000
 noise = lambda : random.randn(N)
-
-UNDEFINED = 'undefined'
-DEFINED = 'defined'
-
 
 class Grapher():
 
@@ -50,8 +46,7 @@ def graph_dag(program):
     from .parser import parse
 
     ast = parse(program)
-    checker = CheckProgramVisitor()
-    checker.visit(ast)
+    checker = check_program(ast)
 
     if errors_reported() > 0:
         sys.exit()

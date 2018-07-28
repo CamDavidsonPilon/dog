@@ -1,8 +1,10 @@
 import sys
+from warnings import warn
 from operator import add
 from functools import reduce
 from .errors import error, errors_reported
 from .checker import check_program
+from .utils import satisfies_backdoor_criterion
 from .ast import *
 from collections import defaultdict
 from numpy import random as random
@@ -45,6 +47,11 @@ class Evaluator():
         return self.global_variables[variable]
 
     def regression(self, variables):
+        variables = set(variables)
+        controlling_variables = variables.difference(['E', 'O'])
+        if not satisfies_backdoor_criterion(self.graph, 'E', 'O', controlling_variables):
+            warn("Controlling variables, %s, does not satifies back-door criteria." % list(controlling_variables))
+
         df = pd.DataFrame({
             v: self.global_variables[v] for v in variables
         })

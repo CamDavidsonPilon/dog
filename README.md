@@ -55,7 +55,7 @@ O ~ 5.0*E + 0.1*Z + R + X6;
 
 ![dag2](https://imgur.com/yo5uBQJ.png)
 
-The order of the forumals don't matter. This was to allow the user to quickly iterate on connections and not have to worry about maintaining the "DAG" on paper. 
+The order of the formulas don't matter. This was to allow the user to quickly iterate on connections and not have to worry about maintaining the "DAG" on paper. 
 
 Variables that never show up on the left hand, like `X1`, `X2`, etc. above, are treated as "noise" and given random values. 
 
@@ -72,13 +72,12 @@ Create a Dog program and save it with a `.dg` extension, can run the following t
 `python -m dog.evaluate <filename> <formula_for_regression>`
 
 ex:
-`python -m dog.evaluate test_file.dg "O ~ E + Z;"`
+`python -m dog.evaluate example/test_dag.dg "O ~ E + Z + R;"`
 
 
 Future
 --------
-
-Implement the backdoor criteria to control for the correct things. 
+Set seed via command line
 Implement unobserved variables
 Implement sample size configs
 Introduce non-linear relationships
