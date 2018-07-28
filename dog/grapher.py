@@ -1,20 +1,3 @@
-# evaluate.py
-
-"""
-
-1. put all undefined variables into name space
-2. traverse the AST, compute the dataset.
-
- ex:
-   def visitBinOp(self, node):
-      left = self.visit(node.left)
-      right = self.visit(node.right)
-      return left + right
-
-    def visit_SimpleLocation(slef, node):
-        return eval('%s' % node.name)
-
-"""
 import sys
 from operator import add
 from functools import reduce
@@ -54,7 +37,7 @@ class Grapher():
                      }
         node_labels = {node:node for node in self.graph.nodes()};
 
-        pos = graphviz_layout(self.graph, prog='dot')
+        pos = graphviz_layout(self.graph, prog='dot', args='')
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
         nx.draw_networkx(self.graph, pos, node_color="#d3d3d3", node_size=1200, edge_color='black', linewidths=1.0)

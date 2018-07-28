@@ -15,7 +15,7 @@ etc.
 Syntax and Grammar
 ----------------------
 
- - `<variables>`: these represent nodes in the causal diagram. There are  special variables, denoted `E` and `O` (exposure and outcome).
+ - `<variables>`: these represent nodes in the causal diagram. There are  special variables, denoted `E` and `O` (exposure and outcome). The outcome variable, `O`, is necessary to be defined. 
  - `~`: represent a causal relationship. The LHS is a child variable of all the  variables on the RHS.
  - `+`: assumes a linear relationship between variables
  - `<floats>`: can be added or multiplied to variables
@@ -66,10 +66,13 @@ Usage
 ### Graphing and Plotting
 Create a Dog program and save it with a `.dg` extension, can run the following to graph it:
 
-`python3 -m dog.grapher <filename>`
+`python -m dog.grapher <filename>`
 
 ### Evaluation
-`python3 -m dog.evaluate <filename>`
+`python -m dog.evaluate <filename> <formula_for_regression>`
+
+ex:
+`python -m dog.evaluate test_file.dg "O ~ E + Z;"`
 
 
 Future

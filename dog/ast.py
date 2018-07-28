@@ -70,6 +70,12 @@ class VarDeclaration(Statement):
     name     : str
     value    : Expression
 
+class OutcomeDeclaration(VarDeclaration):
+    '''
+    var name datatype [ = value ];
+    '''
+    value    : Expression
+
 
 class Literal(Expression):
     '''

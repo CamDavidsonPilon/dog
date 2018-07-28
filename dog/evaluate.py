@@ -1,25 +1,8 @@
-# evaluate.py
-
-"""
-
-1. put all undefined variables into name space
-2. traverse the AST, compute the dataset.
-
- ex:
-   def visitBinOp(self, node):
-      left = self.visit(node.left)
-      right = self.visit(node.right)
-      return left + right
-
-    def visit_SimpleLocation(slef, node):
-        return eval('%s' % node.name)
-
-"""
 import sys
 from operator import add
 from functools import reduce
 from .errors import error, errors_reported
-from .checker import CheckProgramVisitor
+from .checker import check_program
 from .ast import *
 from collections import defaultdict
 from numpy import random as random
@@ -61,28 +44,27 @@ class Evaluator():
         self.global_variables[variable] = results
         return self.global_variables[variable]
 
-    def regression(self):
+    def regression(self, variables):
         df = pd.DataFrame({
-            parent: self.global_variables[parent]
-            for parent in self.graph.predecessors('O')
+            v: self.global_variables[v] for v in variables
         })
         df = sm.tools.add_constant(df)
         return sm.OLS(self.global_variables['O'], df).fit().summary()
 
 
-def evaluate_program(program):
+def evaluate_program(program, proposed_formula):
 
     from .parser import parse
 
     ast = parse(program)
-    checker = CheckProgramVisitor()
-    checker.visit(ast)
-    if errors_reported() > 0:
-        sys.exit()
-
+    checker = check_program(ast)
     eval = Evaluator(checker)
 
-    return eval.regression()
+    formula_ast = parse(proposed_formula)
+    formula_checker = check_program(formula_ast)
+    formula_vars = formula_checker.graph.predecessors('O')
+
+    return eval.regression(formula_vars)
 
 
 def main():
@@ -92,10 +74,10 @@ def main():
     import sys
 
     if len(sys.argv) < 2:
-        sys.stderr.write('Usage: python3 -m dog.evaluate filename\n')
+        sys.stderr.write('Usage: python3 -m dog.evaluate filename formula\n')
         raise SystemExit(1)
 
-    print(evaluate_program(open(sys.argv[1]).read()))
+    print(evaluate_program(open(sys.argv[1]).read(), sys.argv[2]))
 
 if __name__ == '__main__':
     main()

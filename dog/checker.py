@@ -3,8 +3,8 @@
 this should check for no cycles
 
 """
-
-from .errors import error
+import sys
+from .errors import error, errors_reported
 from .ast import *
 from collections import defaultdict
 from networkx import DiGraph
@@ -13,12 +13,15 @@ from networkx.algorithms import is_directed_acyclic_graph
 
 UNDEFINED = 'undefined'
 DEFINED = 'defined'
+OUTCOME, EXPOSURE = 'O', 'E'
 
 class CheckProgramVisitor(NodeVisitor):
 
     def __init__(self):
         self.global_variables = defaultdict(lambda : UNDEFINED)
         self.graph = DiGraph()
+        self._outcome_found = False
+
 
     def visit_VarDeclaration(self, node):
         self.visit(node.value)
@@ -42,7 +45,7 @@ class CheckProgramVisitor(NodeVisitor):
 
     def visit_Exposure(self, node):
         node.children = set([
-                    ('E', None)
+                    (EXPOSURE, None)
         ])
 
     def visit_SimpleLocation(self, node):
@@ -50,6 +53,14 @@ class CheckProgramVisitor(NodeVisitor):
         node.children = set([
             (node.name, None)
         ])
+
+    def visit_OutcomeDeclaration(self, node):
+        self._outcome_found = True
+        self.visit(node.value)
+        self.global_variables[OUTCOME] = DEFINED
+        for child, weight in node.value.children:
+            self.graph.add_edge(child, OUTCOME, weight=weight)
+
 
 
 def check_program(ast):
@@ -59,10 +70,13 @@ def check_program(ast):
     checker = CheckProgramVisitor()
     checker.visit(ast)
     if not is_directed_acyclic_graph(checker.graph):
-        raise ValueError("Graph is not acyclic.")
-    import ipdb
-    ipdb.set_trace()
-    print(checker.graph.edges)
+        error("EOF", "Graph is not acyclic.")
+    if not checker._outcome_found:
+        error("EOF", "Outcome variable not defined.")
+
+    if errors_reported() > 0:
+        sys.exit()
+
     return checker
 
 def main():
