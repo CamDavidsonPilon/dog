@@ -3,8 +3,8 @@ from warnings import warn
 from operator import add
 from functools import reduce
 from .errors import error, errors_reported
-from .checker import check_program
-from .utils import satisfies_backdoor_criterion
+from .checker import check_program, UNDEFINED, DEFINED
+from .utils import satisfies_backdoor_criteria
 from .ast import *
 from collections import defaultdict
 from numpy import random as random
@@ -13,11 +13,8 @@ import pandas as pd
 from statsmodels import api as sm
 
 
-N = 1000
+N = 2000
 noise = lambda : random.randn(N)
-
-UNDEFINED = 'undefined'
-DEFINED = 'defined'
 
 
 class Evaluator():
@@ -29,9 +26,13 @@ class Evaluator():
             checker.global_variables.items()
         }
         self.graph = checker.graph
-        self.evaluate_graph('O')
+        for node in self.graph:
+            self.evaluate_graph(node)
 
     def evaluate_graph(self, variable):
+        if self.global_variables[variable] is not None:
+            return self.global_variables[variable]
+
         results = np.zeros(N)
         for parent in self.graph.predecessors(variable):
             if self.global_variables[parent] is None:
@@ -39,7 +40,7 @@ class Evaluator():
 
             weight = self.graph.get_edge_data(parent, variable)['weight']
             if weight is None:
-                weight = random.randn()
+                weight = random.randint(-10, 10)
             results = results + weight * self.global_variables[parent]
 
         results += noise()
@@ -49,7 +50,7 @@ class Evaluator():
     def regression(self, variables):
         variables = set(variables)
         controlling_variables = variables.difference(['E', 'O'])
-        if not satisfies_backdoor_criterion(self.graph, 'E', 'O', controlling_variables):
+        if not satisfies_backdoor_criteria(self.graph, 'E', 'O', controlling_variables):
             warn("Controlling variables, %s, does not satifies back-door criteria." % list(controlling_variables))
 
         df = pd.DataFrame({
@@ -68,7 +69,7 @@ def evaluate_program(program, proposed_formula):
     eval = Evaluator(checker)
 
     formula_ast = parse(proposed_formula)
-    formula_checker = check_program(formula_ast)
+    formula_checker = check_program(formula_ast) # should check for 'E'
     formula_vars = formula_checker.graph.predecessors('O')
 
     return eval.regression(formula_vars)

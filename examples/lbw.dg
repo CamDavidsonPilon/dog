@@ -1,0 +1,4 @@
+E ~ confounders;
+LBW ~ birth_defect + E;
+O ~ LBW + E + confounders + birth_defect;
+birth_defect ~ E;

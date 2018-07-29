@@ -11,9 +11,6 @@ import pandas as pd
 from statsmodels import api as sm
 
 
-N = 1000
-noise = lambda : random.randn(N)
-
 class Grapher():
 
     def __init__(self, checker):
@@ -36,7 +33,7 @@ class Grapher():
         pos = graphviz_layout(self.graph, prog='dot', args='')
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
-        nx.draw_networkx(self.graph, pos, node_color="#d3d3d3", node_size=1200, edge_color='black', linewidths=1.0)
+        nx.draw_networkx(self.graph, pos, node_color="#d3d3d3", node_size=1400, edge_color='black', linewidths=1.0)
         plt.axis('off')
         pylab.show()
 
