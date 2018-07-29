@@ -21,7 +21,7 @@ class DogLexer(Lexer):
         PLUS, MINUS, TIMES, ASSIGN,
 
         # Other symbols
-        SEMI, OUTCOME, EXPOSURE
+        SEMI, OUTCOME, EXPOSURE, LPAREN, RPAREN
     }
 
 
@@ -72,7 +72,8 @@ class DogLexer(Lexer):
 
 
     ASSIGN = r'~'
-
+    LPAREN = r'\('
+    RPAREN = r'\)'
     SEMI = r';'
 
     ID = r'[a-zA-Z_][a-zA-Z0-9_]*'

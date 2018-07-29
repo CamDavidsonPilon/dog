@@ -69,7 +69,7 @@ def evaluate_program(program, proposed_formula):
     eval = Evaluator(checker)
 
     formula_ast = parse(proposed_formula)
-    formula_checker = check_program(formula_ast) # should check for 'E'
+    formula_checker = check_program(formula_ast, check_exposure=True, check_outcome=True) # should check for 'E'
     formula_vars = formula_checker.graph.predecessors('O')
 
     return eval.regression(formula_vars)

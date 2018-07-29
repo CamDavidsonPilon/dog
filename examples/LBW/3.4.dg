@@ -1,0 +1,3 @@
+// 3.4
+LBW ~ Smoking + (Birth_Defects);
+Mortality ~ Smoking + LBW + (Birth_Defects);

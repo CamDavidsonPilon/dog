@@ -58,6 +58,7 @@ class Location(Expression):
 
 class SimpleLocation(Location):
     name : str
+    observed: bool
 
 
 class Exposure(Location):
@@ -68,6 +69,7 @@ class VarDeclaration(Statement):
     var name datatype [ = value ];
     '''
     name     : str
+    observed : bool
     value    : Expression
 
 class OutcomeDeclaration(VarDeclaration):

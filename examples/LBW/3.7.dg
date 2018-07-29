@@ -1,0 +1,5 @@
+// 3.7
+LBW ~ LBW_A + LBW_B;
+LBW_A ~ Smoking;
+LBW_B ~ (Birth_Defects);
+Mortality ~ Smoking + (Birth_Defects) + LBW_B;

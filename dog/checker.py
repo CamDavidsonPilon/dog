@@ -1,7 +1,6 @@
 # checker.py
 """
-this should check for no cycles
-
+this should check that unobserved variables are always unobserved
 """
 import sys
 from .errors import error, errors_reported
@@ -21,12 +20,28 @@ class CheckProgramVisitor(NodeVisitor):
         self.global_variables = defaultdict(lambda : UNDEFINED)
         self.graph = DiGraph()
         self._outcome_found = False
+        self._exposure_found = False
+
+    def check_observed(self, name, observed, lineno):
+        if self.graph.nodes[name]['observed'] != observed:
+            error(lineno, "Variable %s has different observed vs unobserved attributes" % name)
 
 
     def visit_VarDeclaration(self, node):
         self.visit(node.value)
         self.global_variables[node.name] = DEFINED
-        for child, weight in node.value.children:
+
+        if node.name in self.graph:
+            self.check_observed(node.name, node.observed, node.lineno)
+        else:
+            self.graph.add_node(node.name, observed=node.observed)
+
+        for child, weight, observed in node.value.children:
+            if child in self.graph:
+                self.check_observed(child, observed, node.lineno)
+            else:
+                self.graph.add_node(child, observed=observed)
+
             self.graph.add_edge(child, node.name, weight=weight)
 
     def visit_BinOp(self, node):
@@ -44,26 +59,29 @@ class CheckProgramVisitor(NodeVisitor):
         node.children = set([])
 
     def visit_Exposure(self, node):
+        self._exposure_found = True
         node.children = set([
-                    (EXPOSURE, None)
+                    (EXPOSURE, None, True)
         ])
 
     def visit_SimpleLocation(self, node):
         self.global_variables[node.name]
         node.children = set([
-            (node.name, None)
+            (node.name, None, node.observed)
         ])
 
     def visit_OutcomeDeclaration(self, node):
         self._outcome_found = True
         self.visit(node.value)
         self.global_variables[OUTCOME] = DEFINED
-        for child, weight in node.value.children:
+        self.graph.add_node(OUTCOME, observed=True)
+        for child, weight, observed in node.value.children:
+            self.graph.add_node(child, observed=observed)
             self.graph.add_edge(child, OUTCOME, weight=weight)
 
 
 
-def check_program(ast):
+def check_program(ast, check_exposure=False, check_outcome=False):
     '''
     Check the supplied program (in the form of an AST)
     '''
@@ -71,8 +89,11 @@ def check_program(ast):
     checker.visit(ast)
     if not is_directed_acyclic_graph(checker.graph):
         error("EOF", "Graph is not acyclic.")
-    if not checker._outcome_found:
-        error("EOF", "Outcome variable not defined.")
+    if check_outcome and not checker._outcome_found:
+        error("EOF", "Outcome variable, O, not defined.")
+    if check_exposure and not checker._exposure_found:
+        error("EOF", "Exposure variable, E, not defined.")
+
 
     if errors_reported() > 0:
         sys.exit()

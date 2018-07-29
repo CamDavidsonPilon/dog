@@ -22,6 +22,7 @@ Syntax and Grammar
  - `*`: multiply a float by a variable.
  - `;`: end of line statement
  - `//`: inline comment
+ - `(` and `)` are used to denote unobserved variables on either side of the `~`
 
 Dog programs are represented as lines of forumlas, each line describing parent-child relationships. 
 

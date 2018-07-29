@@ -48,7 +48,12 @@ class DogParser(Parser):
 
     @_('ID')
     def expression(self, p):
-        return SimpleLocation(p.ID, lineno=p.lineno)
+        return SimpleLocation(p.ID, True, lineno=p.lineno)
+
+    @_('LPAREN ID RPAREN')
+    def expression(self, p):
+        return SimpleLocation(p.ID, False, lineno=p.lineno)
+
 
     @_('EXPOSURE')
     def expression(self, p):
@@ -64,7 +69,12 @@ class DogParser(Parser):
 
     @_('ID ASSIGN expression SEMI')
     def var_declaration(self, p):
-        return VarDeclaration(p.ID, p.expression, lineno=p.lineno)
+        return VarDeclaration(p.ID, True, p.expression, lineno=p.lineno)
+
+    @_('LPAREN ID RPAREN ASSIGN expression SEMI')
+    def var_declaration(self, p):
+        return VarDeclaration(p.ID, False, p.expression, lineno=p.lineno)
+
 
     @_('EXPOSURE ASSIGN expression SEMI')
     def var_declaration(self, p):
