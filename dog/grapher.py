@@ -32,7 +32,7 @@ class Grapher():
 
         node_colors = ["#d3d3d3" if d.get('observed', False) else "#a3c1e0" for node, d in self.graph.nodes(data=True)]
 
-        pos = graphviz_layout(self.graph, prog='dot', args='')
+        pos = graphviz_layout(self.graph, prog='neato', args='')
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
         nx.draw_networkx(self.graph, pos, node_color=node_colors, node_size=2000,

@@ -40,7 +40,7 @@ class DogParser(Parser):
 
     @_('literal TIMES ID')
     def expression(self, p):
-        return BinOp(p[1], p[0], SimpleLocation(p[2], lineno=p.lineno), lineno=p.lineno)
+        return BinOp(p[1], p[0], SimpleLocation(p[2], True, lineno=p.lineno), lineno=p.lineno)
 
     @_('literal TIMES EXPOSURE')
     def expression(self, p):

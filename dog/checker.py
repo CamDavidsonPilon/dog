@@ -50,7 +50,7 @@ class CheckProgramVisitor(NodeVisitor):
 
         if node.op == '*':
             # this is a weighted variable
-            node.children = set([(node.right.name, node.left.value)])
+            node.children = set([(node.right.name, node.left.value, node.right.observed)])
 
         elif node.op == '+':
             node.children = node.left.children.union(node.right.children)
@@ -59,7 +59,9 @@ class CheckProgramVisitor(NodeVisitor):
         node.children = set([])
 
     def visit_Exposure(self, node):
+        self.global_variables[node.name]
         self._exposure_found = True
+        node.observed = True
         node.children = set([
                     (EXPOSURE, None, True)
         ])
@@ -75,6 +77,7 @@ class CheckProgramVisitor(NodeVisitor):
         self.visit(node.value)
         self.global_variables[OUTCOME] = DEFINED
         self.graph.add_node(OUTCOME, observed=True)
+
         for child, weight, observed in node.value.children:
             self.graph.add_node(child, observed=observed)
             self.graph.add_edge(child, OUTCOME, weight=weight)
