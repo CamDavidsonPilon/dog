@@ -12,7 +12,7 @@ E ~ 0.01 * (V1) + 1.0 * V2;
 O ~ 0.01 * (V1) + 5.0 * E + 1.0 * V2;
 ```
 
-![dag 1](https://raw.github.com/CamDavidsonPilon/dogg/master/examples/What%20happens%20if%20I%20am%20missing%20a%20%22small%22%20confounder%3F/dag1.png)
+![dag 1](https://raw.github.com/CamDavidsonPilon/dog/master/examples/What%20happens%20if%20I%20am%20missing%20a%20%22small%22%20confounder%3F/dag1.png)
 
 In the above graph, `V1` is an unobserved variable (not collected in our dataset) but also a confounder. However, it's effect is quite small. How will this effect the estimate of `E` on `O`?
 
