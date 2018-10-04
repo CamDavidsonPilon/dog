@@ -12,7 +12,7 @@ O ~ V3;
 
 ![dag 1](https://raw.github.com/CamDavidsonPilon/dog/master/examples/What%20happens%20when%20I%20start%20to%20include%20variables%20in%20the%20model%20that%20are%20properly%20controlled%20for%20by%20other%20variables%3F/dag1.png)
 
-We are interested in the causal effect of the exposure, `E`, on the outcome, `O`. However, there is a confounders, `V1`. Controlling for `V1` is sufficient to estimate a causal effect. Performing the regression `O ~ E + V1`
+We are interested in the causal effect of the exposure, `E`, on the outcome, `O`. However, there is a confounder, `V1`. Controlling for `V1` is sufficient to estimate a causal effect. Performing the regression `O ~ E + V1`
 ```
 python3 -m dog.evaluate examples/What\ happens\ when\ I\ start\ to\ include\ variables\ in\ the\ model\ that\ are\ properly\ controlled\ for\ by\ other\ variables\?/dag1.dg 'O ~ E + V1;' -s 1
 ```
@@ -26,17 +26,17 @@ Let's see how our coefficient estimate of `E` changes as we vary the set of vari
 | regression                  | `E` coefficient   | std. error    | R^2       |
 |------------------------     |-------------  |------------   |-------    |
 | `E + V1;`                   | 1.1094        | 0.203         | 0.949     |
-| `E + V1 + V3;`              | 1.0018        | 0.026         | 0.999     |
 | `E + V1 + V2;`              | 1.1034        | 0.202         | 0.949     |
+| `E + V1 + V3;`              | 1.0018        | 0.026         | 0.999     |
 | `E + V1 + V4;`              | 1.1013        | 0.202         | 0.949     |
-| `E + V1 + V3 + V4;`         | 0.9948        | 0.022         | 0.999     |
 | `E + V1 + V2 + V3;`         | 0.9968        | 0.022         | 0.999     |
+| `E + V1 + V3 + V4;`         | 0.9948        | 0.022         | 0.999     |
 | `E + V1 + V2 + V4;`         | 1.1051        | 0.202         | 0.949     |
-| `E + V1 + V2 + V4 + V3;`    | 0.9965        | 0.022         | 0.999     |
+| `E + V1 + V2 + V3 + V4;`    | 0.9965        | 0.022         | 0.999     |
 
 Some interesting patterns come out:
 
-1. The `E` coefficient doesn't change _except when `V3`_ is included. 
+1. The `E` coefficient doesn't change much _except when `V3`_ is included. 
 2. When `V3` is included, our standard error drops by an order of magnitude, leading to a much more precise estimate of the coefficient of `E`. Similarly, R^2 increases as well.
 3. Generally, adding more variables in the model leads to the smallest std. error. 
 
