@@ -13,13 +13,13 @@ from statsmodels import api as sm
 from numpy import random as random
 import argparse
 
-N = 2000
 
 
 class Evaluator():
 
-    def __init__(self, checker, seed=41):
+    def __init__(self, checker, seed=41, sample_size=20000):
         np.random.seed(seed)
+        self.sample_size = sample_size
         self.global_variables = {
             name: self.noise() if defined == UNDEFINED else None
             for (name, defined) in
@@ -30,7 +30,7 @@ class Evaluator():
             self.evaluate_graph(node)
 
     def noise(self):
-        v = random.randn(N)
+        v = random.randn(self.sample_size)
         return v
 
 
@@ -38,7 +38,7 @@ class Evaluator():
         if self.global_variables[variable] is not None:
             return self.global_variables[variable]
 
-        results = np.zeros(N)
+        results = np.zeros(self.sample_size)
         for parent in sorted(self.graph.predecessors(variable)):
             if self.global_variables[parent] is None:
                 self.evaluate_graph(parent)
@@ -67,14 +67,14 @@ class Evaluator():
         return sm.OLS(self.global_variables['O'], df).fit().summary()
 
 
-def evaluate_program(program, proposed_formula, seed):
+def evaluate_program(program, proposed_formula, seed, sample_size):
 
     from .parser import parse
 
     ast = parse(program)
     checker = check_program(ast, check_exposure=True, check_outcome=True)
 
-    eval = Evaluator(checker, seed=seed)
+    eval = Evaluator(checker, seed=seed, sample_size=sample_size)
     formula_ast = parse(proposed_formula)
     formula_checker = check_program(formula_ast, check_exposure=True, check_outcome=True) # should check for 'E'
     formula_vars = formula_checker.graph.predecessors('O')
@@ -92,9 +92,10 @@ def main():
     parser.add_argument("filename", help="the .dg filename to graph")
     parser.add_argument("formula", help="the formula to run")
     parser.add_argument("-s", "--seed", help="seed", type=int)
+    parser.add_argument("-z", "--sample-size", help="sample size of data to generate", type=int)
     args = parser.parse_args()
 
-    print(evaluate_program(open(args.filename).read(), args.formula, args.seed))
+    print(evaluate_program(open(args.filename).read(), args.formula, args.seed, args.sample_size))
 
 if __name__ == '__main__':
     main()

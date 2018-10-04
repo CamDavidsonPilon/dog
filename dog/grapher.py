@@ -19,6 +19,11 @@ class Grapher():
 
     def plot(self, output=None, show=True):
 
+        def mark_unobserved(label, data):
+            if not data['observed']:
+                return "(" + label + ")"
+            return label
+
         def resize_label_size(label):
             if len(label) < 16:
                 return label
@@ -45,11 +50,13 @@ class Grapher():
                      for u,v,d in self.graph.edges(data=True)
                      if d['weight'] is not None
                      }
-        node_labels = {node: resize_label_size(node) for node in self.graph.nodes()}
+        node_labels = {node: mark_unobserved(resize_label_size(node), data) for node, data in self.graph.nodes(data=True)}
 
         node_colors = ["#d3d3d3" if d.get('observed', False) else "#9ebbc6" for node, d in self.graph.nodes(data=True)]
 
+
         pos = graphviz_layout(self.graph, prog='dot', args='')
+
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
         nx.draw_networkx(self.graph, pos, node_color=node_colors, node_size=2000,
                          edge_color='black', linewidths=1.0, width=1.5, labels=node_labels,
