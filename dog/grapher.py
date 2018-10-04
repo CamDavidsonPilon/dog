@@ -9,6 +9,7 @@ from numpy import random as random
 import numpy as np
 import pandas as pd
 from statsmodels import api as sm
+import argparse
 
 
 class Grapher():
@@ -16,7 +17,20 @@ class Grapher():
     def __init__(self, checker):
         self.graph = checker.graph
 
-    def plot(self):
+    def plot(self, output=None, show=True):
+
+        def resize_label_size(label):
+            if len(label) < 16:
+                return label
+            else:
+                words = label.split("_")
+                word_lengths = [len(w) for w in words]
+                # try to balance 2 lines
+                arg_smallest_delta = np.argmin([
+                    abs(sum(word_lengths[i:]) - sum(word_lengths[:i])) for i in range(1, len(words))
+                ]) + 1 # plus 1 because we started at one
+                return "_".join(words[:arg_smallest_delta]) + "_\n" + "_".join(words[arg_smallest_delta:])
+
 
         import networkx as nx
         import numpy as np
@@ -24,25 +38,32 @@ class Grapher():
         import pylab
         from networkx.drawing.nx_agraph import graphviz_layout
 
+        fig = plt.figure(figsize=(8, 7))
+        ax = plt.subplot(1,1,1)
+
         edge_labels= {(u,v,): d['weight']
                      for u,v,d in self.graph.edges(data=True)
                      if d['weight'] is not None
                      }
-        node_labels = {node:node for node in self.graph.nodes()}
+        node_labels = {node: resize_label_size(node) for node in self.graph.nodes()}
 
-        node_colors = ["#d3d3d3" if d.get('observed', False) else "#a3c1e0" for node, d in self.graph.nodes(data=True)]
+        node_colors = ["#d3d3d3" if d.get('observed', False) else "#9ebbc6" for node, d in self.graph.nodes(data=True)]
 
-        pos = graphviz_layout(self.graph, prog='neato', args='')
+        pos = graphviz_layout(self.graph, prog='dot', args='')
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
-        nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
         nx.draw_networkx(self.graph, pos, node_color=node_colors, node_size=2000,
-                         edge_color='black', linewidths=1.0, width=1.5,
-                         arrowsize=15)
+                         edge_color='black', linewidths=1.0, width=1.5, labels=node_labels,
+                         arrowsize=15, ax=ax, font_size=12)
         plt.axis('off')
-        pylab.show()
+
+        if output:
+            plt.savefig(output, dpi=275, bbox_inches='tight')
+
+        if show:
+            pylab.show()
 
 
-def graph_dag(program):
+def graph_dag(program, output, show):
 
     from .parser import parse
 
@@ -54,20 +75,18 @@ def graph_dag(program):
 
     graph = Grapher(checker)
 
-    return graph.plot()
+    return graph.plot(output, show)
 
 
 def main():
-    '''
-    Main program. Used for testing
-    '''
-    import sys
 
-    if len(sys.argv) < 2:
-        sys.stderr.write('Usage: python3 -m dog.grapher filename\n')
-        raise SystemExit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename", help="the .dg filename to graph")
+    parser.add_argument("-o", "--output", help="name of the file to save the image to")
+    parser.add_argument('--no-show', help='suppress showing the graph in the UI', action="store_false")
+    args = parser.parse_args()
 
-    graph_dag(open(sys.argv[1]).read())
+    graph_dag(open(args.filename).read(), args.output, args.no_show)
 
 if __name__ == '__main__':
     main()

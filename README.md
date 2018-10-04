@@ -78,8 +78,7 @@ ex:
 
 Future
 --------
-Set seed via command line
-Implement unobserved variables
-Implement sample size configs
-Introduce non-linear relationships
-Introduce different noise
+- Set seed via command line
+- Implement sample size configs
+- Introduce non-linear relationships
+- Introduce different noise

@@ -68,6 +68,10 @@ class CheckProgramVisitor(NodeVisitor):
 
     def visit_SimpleLocation(self, node):
         self.global_variables[node.name]
+
+        if node.name in self.graph:
+            self.check_observed(node.name, node.observed, node.lineno)
+
         node.children = set([
             (node.name, None, node.observed)
         ])
@@ -100,6 +104,7 @@ def check_program(ast, check_exposure=False, check_outcome=False):
 
     if errors_reported() > 0:
         sys.exit()
+
 
     return checker
 

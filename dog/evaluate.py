@@ -11,15 +11,15 @@ import numpy as np
 import pandas as pd
 from statsmodels import api as sm
 from numpy import random as random
-
-np.random.seed(41)
+import argparse
 
 N = 2000
 
 
 class Evaluator():
 
-    def __init__(self, checker):
+    def __init__(self, checker, seed=41):
+        np.random.seed(seed)
         self.global_variables = {
             name: self.noise() if defined == UNDEFINED else None
             for (name, defined) in
@@ -62,23 +62,22 @@ class Evaluator():
         df = pd.DataFrame({
             v: self.global_variables[v] for v in variables
         })
-
+        df = df.sort_index(axis=1)
         df = sm.tools.add_constant(df)
         return sm.OLS(self.global_variables['O'], df).fit().summary()
 
 
-def evaluate_program(program, proposed_formula, seed=43):
+def evaluate_program(program, proposed_formula, seed):
 
     from .parser import parse
 
     ast = parse(program)
     checker = check_program(ast, check_exposure=True, check_outcome=True)
 
-    eval = Evaluator(checker)
+    eval = Evaluator(checker, seed=seed)
     formula_ast = parse(proposed_formula)
     formula_checker = check_program(formula_ast, check_exposure=True, check_outcome=True) # should check for 'E'
-    formula_vars = sorted(formula_checker.graph.predecessors('O'))
-
+    formula_vars = formula_checker.graph.predecessors('O')
     return eval.regression(formula_vars)
 
 
@@ -88,13 +87,14 @@ def main():
     '''
     import sys
 
-    if len(sys.argv) < 2:
-        sys.stderr.write('Usage: python3 -m dog.evaluate filename formula\n')
-        raise SystemExit(1)
-    elif len(sys.argv) == 3:
-        print(evaluate_program(open(sys.argv[1]).read(), sys.argv[2]))
-    elif len(sys.argv) == 4:
-        print(evaluate_program(open(sys.argv[1]).read(), sys.argv[2], int(sys.argv[3])))
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename", help="the .dg filename to graph")
+    parser.add_argument("formula", help="the formula to run")
+    parser.add_argument("-s", "--seed", help="seed", type=int)
+    args = parser.parse_args()
+
+    print(evaluate_program(open(args.filename).read(), args.formula, args.seed))
 
 if __name__ == '__main__':
     main()
