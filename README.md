@@ -67,7 +67,11 @@ Usage
 ### Graphing and Plotting
 Create a Dog program and save it with a `.dg` extension, can run the following to graph it:
 
-`python -m dog.grapher <filename>`
+`python -m dog.grapher <filename.dg> -o <optional_filename_to_save_to>` 
+
+or to save to a output image:
+
+`python -m dog.grapher <filename.dg> -o <optional_filename_to_save_to> --no-show` 
 
 ### Evaluation
 `python -m dog.evaluate <filename> <formula_for_regression>`
@@ -78,7 +82,6 @@ ex:
 
 Future
 --------
-- Set seed via command line
 - Implement sample size configs
 - Introduce non-linear relationships
 - Introduce different noise

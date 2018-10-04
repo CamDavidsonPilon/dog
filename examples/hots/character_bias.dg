@@ -1,0 +1,13 @@
+// This is the proper way to measure bias of characters.
+// The naive P(win | char) is not causal.
+
+
+
+outcome ~ char;
+outcome ~ other_player_exp;
+outcome ~ other_player_char_exp;
+char ~ map + char_exp + player_exp + other_chars;
+other_chars ~ map + other_player_char_exp + other_player_exp;
+other_player_exp ~ other_player_char_exp;
+outcome ~ other_chars + player_exp + char_exp;
+player_exp ~ char_exp;

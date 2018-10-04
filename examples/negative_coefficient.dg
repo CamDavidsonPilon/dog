@@ -1,0 +1,6 @@
+// Here's an example where the coefficient (direct) is negative, but the total
+// effect is positive. (This explain mysteries of "why is this coef negative?")
+//
+
+E ~ 5.0*(H);
+O ~ 2.0*E + -20.0*(H);

@@ -1,0 +1,5 @@
+// This is a good example of when controlling for everything is wrong.
+// because we are including a child variable, D.
+
+D ~ 1.0*B + 1.0*E;
+O ~ -3.0*B + -1.0*E + -0.5*D;
