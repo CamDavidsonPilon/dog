@@ -1,8 +1,7 @@
 import sys
-from warnings import warn
 from operator import add
 from functools import reduce
-from .errors import error, errors_reported
+from .errors import error, errors_reported, warning
 from .checker import check_program, UNDEFINED, DEFINED
 from .utils import satisfies_backdoor_criteria
 from .ast import *
@@ -45,7 +44,7 @@ class Evaluator():
 
             weight = self.graph.get_edge_data(parent, variable)['weight']
             if weight is None:
-                weight = random.randint(-10, 10)
+                weight = random.randint(-10, 10) or 1  # we never want a 0 effect size, so make it 1 instead.
             results = results + weight * self.global_variables[parent]
 
         results += self.noise()
@@ -57,7 +56,7 @@ class Evaluator():
         controlling_variables = variables.difference(['E', 'O'])
 
         if not satisfies_backdoor_criteria(self.graph, 'E', 'O', controlling_variables):
-            warn("Controlling variables, %s, does not satifies back-door criteria." % list(controlling_variables))
+            warning("EOF", "Controlling variables, %s, does not satifies back-door criteria." % list(controlling_variables))
 
         df = pd.DataFrame({
             v: self.global_variables[v] for v in variables
@@ -92,7 +91,7 @@ def main():
     parser.add_argument("filename", help="the .dg filename to graph")
     parser.add_argument("formula", help="the formula to run")
     parser.add_argument("-s", "--seed", help="seed", type=int)
-    parser.add_argument("-z", "--sample-size", help="sample size of data to generate", type=int)
+    parser.add_argument("-z", "--sample-size", help="sample size of data to generate", type=int, const=2000, nargs='?', default=2000)
     args = parser.parse_args()
 
     print(evaluate_program(open(args.filename).read(), args.formula, args.seed, args.sample_size))

@@ -63,6 +63,7 @@ class SimpleLocation(Location):
 
 class Exposure(Location):
     name : str
+    observed: bool
 
 class VarDeclaration(Statement):
     '''

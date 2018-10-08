@@ -46,11 +46,6 @@ class DogParser(Parser):
     def expression(self, p):
         return BinOp(p[1], p[0], SimpleLocation(p.ID, False, lineno=p.lineno), lineno=p.lineno)
 
-
-    @_('literal TIMES EXPOSURE')
-    def expression(self, p):
-        return BinOp(p[1], p[0], Exposure(p[2], lineno=p.lineno), lineno=p.lineno)
-
     @_('ID')
     def expression(self, p):
         return SimpleLocation(p.ID, True, lineno=p.lineno)
@@ -59,9 +54,21 @@ class DogParser(Parser):
     def expression(self, p):
         return SimpleLocation(p.ID, False, lineno=p.lineno)
 
+    @_('literal TIMES EXPOSURE')
+    def expression(self, p):
+        return BinOp(p[1], p[0], Exposure(p[2], True, lineno=p.lineno), lineno=p.lineno)
+
+    @_('literal TIMES LPAREN EXPOSURE RPAREN')
+    def expression(self, p):
+        return BinOp(p[1], p[0], Exposure(p[3], False, lineno=p.lineno), lineno=p.lineno)
+
     @_('EXPOSURE')
     def expression(self, p):
-        return Exposure(p[0], lineno=p.lineno)
+        return Exposure(p[0], True, lineno=p.lineno)
+
+    @_('LPAREN EXPOSURE RPAREN')
+    def expression(self, p):
+        return Exposure(p[1], False, lineno=p.lineno)
 
     @_('literal')
     def expression(self, p):
@@ -82,6 +89,11 @@ class DogParser(Parser):
     @_('EXPOSURE ASSIGN expression SEMI')
     def var_declaration(self, p):
         return VarDeclaration(p[0], True, p.expression, lineno=p.lineno)
+
+    @_('LPAREN EXPOSURE RPAREN ASSIGN expression SEMI')
+    def var_declaration(self, p):
+        return VarDeclaration(p[1], False, p.expression, lineno=p.lineno)
+
 
     @_('OUTCOME ASSIGN expression SEMI')
     def var_declaration(self, p):

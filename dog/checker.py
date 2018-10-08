@@ -3,7 +3,7 @@
 this should check that unobserved variables are always unobserved
 """
 import sys
-from .errors import error, errors_reported
+from .errors import error, errors_reported, warning
 from .ast import *
 from collections import defaultdict
 from networkx import DiGraph
@@ -61,9 +61,8 @@ class CheckProgramVisitor(NodeVisitor):
     def visit_Exposure(self, node):
         self.global_variables[node.name]
         self._exposure_found = True
-        node.observed = True
         node.children = set([
-                    (EXPOSURE, None, True)
+                    (EXPOSURE, None, True) # TODO: this True may be a bug, it may need to be node.observed
         ])
 
     def visit_SimpleLocation(self, node):
@@ -98,8 +97,8 @@ def check_program(ast, check_exposure=False, check_outcome=False):
         error("EOF", "Graph is not acyclic.")
     if check_outcome and not checker._outcome_found:
         error("EOF", "Outcome variable, O, not defined.")
-    if check_exposure and not checker._exposure_found:
-        error("EOF", "Exposure variable, E, not defined.")
+    if (check_exposure and not checker._exposure_found):
+        warning("EOF", "Exposure variable, E, not defined.")
 
 
     if errors_reported() > 0:

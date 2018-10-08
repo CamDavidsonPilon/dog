@@ -41,6 +41,17 @@ def error(lineno, message, filename=None):
     print(errmsg, file=sys.stderr)
     _num_errors += 1
 
+def warning(lineno, message, filename=None):
+    '''
+    Report a compiler error to all subscribers
+    '''
+    if not filename:
+        warnmsg = "{}: {}".format(lineno, message)
+    else:
+        warnmsg = "{}:{}: {}".format(filename,lineno,message)
+
+    print(warnmsg, file=sys.stderr)
+
 def errors_reported():
     '''
     Return number of errors reported
