@@ -1,0 +1,5 @@
+E ~ C;
+M ~ C + E;
+O ~ M;
+// regress O ~ E; to see a backdoor through M
+// https://twitter.com/ProfMattFox/status/1050029880384065536
