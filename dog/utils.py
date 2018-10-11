@@ -42,7 +42,7 @@ def satisfies_backdoor_criteria(dag, X, outcome, S):
         parents = list(dag.predecessors(node))
         if len(parents) > 1:
             for a, b in combinations(parents, 2):
-                if not (dag.has_edge(a, b) or dag.has_edge(a, b)):
+                if not (dag.has_edge(a, b) or dag.has_edge(b, a)):
                     # order doesn't matter, as the next step removes all direction
                     dag.add_edge(a, b)
 
@@ -56,3 +56,5 @@ def satisfies_backdoor_criteria(dag, X, outcome, S):
     # Finally: does there exist a path between X and outcome?
     # If so, then we failed the criteria.
     return not nx.has_path(g, X, outcome)
+
+
