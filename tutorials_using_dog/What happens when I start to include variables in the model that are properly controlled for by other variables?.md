@@ -41,3 +41,6 @@ Some interesting patterns come out:
 3. Generally, adding more variables in the model leads to the smallest std. error. 
 
 This is an important lesson: it's beneficial to add more variables, given they don't violate the backdoor criteria, since they will reduce the standard error of your estimate. On the other hand, we haven't explored what may happen if the model/variable is misspecified (ex: a variable should be a included non-linearly).
+
+
+These are called "precision variables": https://stats.stackexchange.com/a/377957/11867
