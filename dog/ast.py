@@ -65,6 +65,11 @@ class Exposure(Location):
     name : str
     observed: bool
 
+
+class Outcome(Location):
+    name : str
+    observed: bool
+
 class VarDeclaration(Statement):
     '''
     var name datatype [ = value ];

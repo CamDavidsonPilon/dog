@@ -65,6 +65,14 @@ class CheckProgramVisitor(NodeVisitor):
                     (EXPOSURE, None, True) # TODO: this True may be a bug, it may need to be node.observed
         ])
 
+
+    def visit_Outcome(self, node):
+        self.global_variables[node.name]
+        self._outcome_found = True
+        node.children = set([
+                    (OUTCOME, None, True) # TODO: this True may be a bug, it may need to be node.observed
+        ])
+
     def visit_SimpleLocation(self, node):
         self.global_variables[node.name]
 

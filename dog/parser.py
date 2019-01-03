@@ -94,6 +94,9 @@ class DogParser(Parser):
     def var_declaration(self, p):
         return VarDeclaration(p[1], False, p.expression, lineno=p.lineno)
 
+    @_('OUTCOME')
+    def expression(self, p):
+        return Outcome(p[0], True, lineno=p.lineno)
 
     @_('OUTCOME ASSIGN expression SEMI')
     def var_declaration(self, p):
