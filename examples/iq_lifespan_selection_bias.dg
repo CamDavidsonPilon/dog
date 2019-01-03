@@ -1,0 +1,5 @@
+IQ ~ (genetic) + (envrnmnt);
+twin_survival ~ IQ + (genetic) + (envrnmnt);
+included_in_study ~ twin_survival;
+
+

@@ -55,7 +55,7 @@ class Grapher():
         node_colors = ["#d3d3d3" if d.get('observed', False) else "#9ebbc6" for node, d in self.graph.nodes(data=True)]
 
 
-        pos = graphviz_layout(self.graph.to_undirected(), prog='neato')
+        pos = graphviz_layout(self.graph, prog='neato')
 
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels)
         nx.draw_networkx(self.graph, pos, node_color=node_colors, node_size=2000,
