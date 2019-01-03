@@ -8,7 +8,7 @@ O ~ 1.0*E;
 Y ~ O + E;
 ```
 
-![dag](https://raw.github.com/CamDavidsonPilon/dog/master/examples/What happens when I control on a downstream variable of the outcome?/dag.png)
+![dag](https://raw.github.com/CamDavidsonPilon/dog/master/examples/What%20happens%20when%20I%20control%20on%20a%20downstream%20variable%20of%20the%20outcome?/dag.png)
 
 The unique thing here is that the variable `Y` is a descendent of the outcome variable `O`. This could be the case in case-control studies, or if the outcome (ex: death) affects who is in our population. In both these examples, typically `Y` is _conditioned_ on, but we will control for it. (This is subtle difference: the former suggests to restrict analysis to `Y=y` for example, where the latter says "for subjects with E=e, and Y=y").
 
